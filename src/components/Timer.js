@@ -2,14 +2,17 @@ import React, { useState, useEffect } from "react";
 import styled from "@emotion/styled";
 import Input from "./Input";
 const Timer = () => {
-  const [seconds, setSeconds] = useState(0);
+
+  const [seconds, setSeconds] = useState(30);
   const [isActive, setIsActive] = useState(false);
   const [rest, setRest] = useState(10);
   const [rounds, setRounds] = useState(7);
 
   const toggle = () => setIsActive(!isActive);
   const reset = () => {
-    setSeconds(0);
+    setSeconds(30);
+    setRest(10);
+    setRounds(7);
     setIsActive(false);
   };
 
@@ -23,15 +26,27 @@ const Timer = () => {
       interval = setInterval(() => {
         setSeconds((seconds) => seconds - 1);
       }, 1000);
-    } 
-    
-    else if (!isActive && seconds !== 0) {
+    }
+    if (isActive && rest !== 0 && seconds === 0) {
+      interval = setInterval(() => {
+        setRest((rest) => rest - 1);
+      }, 1000);
+    }
+    if (isActive && seconds === 0 && rest === 0) {
+      setRounds((rounds) => rounds - 1);
+      setSeconds(30);
+      setRest(10);
+    }
+
+    if (isActive && rounds === 0) {
+      //WORKOUT COMPLETE
+    } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
     return () => {
       clearInterval(interval);
     };
-  }, [isActive, seconds]);
+  }, [isActive, seconds, rounds, rest]);
 
   const App = styled.button`
     width: 100vw;
@@ -59,7 +74,6 @@ const Timer = () => {
     font-weight: 600;
     font-size: 0.8rem;
     border-style: groove;
-
   `;
   return (
     <App>
@@ -96,7 +110,7 @@ const Timer = () => {
             isActive ? "active" : "inactive"
           }`}
           onClick={toggle}
-          >
+        >
           {isActive ? "Pause" : "Start"}
         </Button>
         <Button className="button" onClick={reset}>
