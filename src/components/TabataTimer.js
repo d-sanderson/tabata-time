@@ -1,7 +1,11 @@
 import React, { useState, useEffect } from "react";
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
 import styled from "@emotion/styled";
+
+
 import Input from "./Input";
-const Timer = () => {
+const TabataTimer = () => {
 
   const [seconds, setSeconds] = useState(30);
   const [isActive, setIsActive] = useState(false);
@@ -37,9 +41,9 @@ const Timer = () => {
       setSeconds(30);
       setRest(10);
     }
-
     if (isActive && rounds === 0) {
       //WORKOUT COMPLETE
+      setIsActive(false)
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
@@ -78,6 +82,7 @@ const Timer = () => {
   return (
     <App>
       <Time>{seconds}s work</Time>
+      {/* <CircularProgressbar value={seconds / 30 * 100} text={`${seconds} s`} /> */}
       <div className="row">
         <Input
           handler={handleSetSeconds}
@@ -121,4 +126,4 @@ const Timer = () => {
   );
 };
 
-export default Timer;
+export default TabataTimer;

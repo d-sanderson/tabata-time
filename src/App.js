@@ -1,9 +1,9 @@
 import React from "react";
-import Timer from "./components/Timer";
+import TabataTimer from "./components/TabataTimer";
 
 const App = () => {
   return (
-      <Timer/>
+      <TabataTimer/>
   );
 }
 
