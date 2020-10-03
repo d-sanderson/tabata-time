@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "@emotion/styled";
 
 const Input = ({ label, labelFor, type, placeholder, value, handler }) => {
@@ -21,9 +21,11 @@ const Input = ({ label, labelFor, type, placeholder, value, handler }) => {
       <Input
         aria-label={labelFor}
         onChange={(e) => {
+          // validate that input is a number
+          if(Number.isInteger(parseInt(e.target.value)))
           handler(parseInt(e.target.value));
         }}
-        onKeyDown={e => e.key == "Backspace" ? handler(0) : null}
+        onKeyDown={e => e.key === "Backspace" ? handler(0) : null}
         type={type}
         value={value}
         placeholder={placeholder}
