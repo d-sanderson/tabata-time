@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import styled from "@emotion/styled";
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
+import styled from "@emotion/styled";
 
 import Input from "./Input";
 const TabataTimer = () => {
-
   const [seconds, setSeconds] = useState(30);
   const [isActive, setIsActive] = useState(false);
   const [rest, setRest] = useState(10);
-  const [rounds, setRounds] = useState(7);
+  const [rounds, setRounds] = useState(8);
 
   const toggle = () => setIsActive(!isActive);
   const reset = () => {
@@ -36,14 +39,14 @@ const TabataTimer = () => {
         setRest((rest) => rest - 1);
       }, 1000);
     }
-    if (isActive && seconds === 0 && rest === 0) {
+    if (isActive && seconds === 0 && rest === 0 && rounds > 0) {
       setRounds((rounds) => rounds - 1);
       setSeconds(30);
       setRest(10);
     }
-    if (isActive && rounds === 0) {
+    if (isActive && rounds === 0 && seconds === 0 && rest === 0) {
       //WORKOUT COMPLETE
-      setIsActive(false)
+      setIsActive(false);
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
     }
@@ -52,9 +55,10 @@ const TabataTimer = () => {
     };
   }, [isActive, seconds, rounds, rest]);
 
-  const App = styled.button`
+  const App = styled.div`
     width: 100vw;
     height: 100vh;
+    font-family: Arial;
     background-color: #282c34;
     min-height: 100vh;
     display: flex;
@@ -64,7 +68,9 @@ const TabataTimer = () => {
     font-size: calc(10px + 2vmin);
     color: white;
   `;
-
+  const Number = styled.span`
+    font-family: monospace;
+  `;
   const Time = styled.div`
     font-size: 3rem;
     padding: 2rem;
@@ -72,55 +78,125 @@ const TabataTimer = () => {
 
   const Button = styled.button`
     padding: 0.6rem 1.5rem;
-    margin: 20px 0.4rem;
+    margin: 80px 0.4rem;
     border-radius: 3px;
     text-transform: uppercase;
     font-weight: 600;
     font-size: 0.8rem;
     border-style: groove;
+    background-color: white;
+    color: black;
+  `;
+
+  const Phase = styled.div`
+  margin: 0 0 40px 0;
+  `
+  const Flex = styled.div`
+    display: flex;
+    justify-content: center;
   `;
   return (
     <App>
-      <Time>{seconds}s work</Time>
+      <h3>{rounds} / 8</h3>
+      <Phase>
+        {isActive && seconds > 0 ? (
+          <h1>WORK</h1>
+        ) : isActive && rest > 0 ? (
+          <h1>REST</h1>
+        ) : !isActive && rounds === 0 && rest === 0 && seconds === 0 ? (
+          <h1>DONE</h1>
+        ) : (
+          <h1>BEGIN</h1>
+        )}
+      </Phase>
+      {/* {isActive && (
+        <Time>
+          <Number>{seconds}</Number>s work
+        </Time>
+      )} */}
+      {isActive && (
+        <CircularProgressbarWithChildren
+          style={{ width: "400px", height: "450px" }}
+          value={rest / 10 * 100}
+          text={rest !== 0 && seconds == 0 ? rest + "s" : null}
+          strokeWidth={3}
+          styles={buildStyles({
+            pathColor: "#f00",
+            trailColor: "transparent",
+          })}
+        >
+          {/*
+          Width here needs to be (100 - 2 * strokeWidth)% 
+          in order to fit exactly inside the outer progressbar.
+        */}
+          <div style={{ width: "400px", height: "400px" }}>
+            <CircularProgressbar
+              value={seconds / 30 * 100}
+              strokeWidth={3}
+              text={seconds !== 0 && seconds + "s"}
+              styles={buildStyles({
+                trailColor: "transparent",
+
+              })}
+            />
+          </div>
+        </CircularProgressbarWithChildren>
+      )}
       {/* <CircularProgressbar value={seconds / 30 * 100} text={`${seconds} s`} /> */}
       <div className="row">
-        <Input
-          handler={handleSetSeconds}
-          value={seconds}
-          placeholder="set secs"
-          type="text"
-          labelFor="seconds"
-          label="seconds"
-        />
-        <Time>{rest}s rest</Time>
+        {!isActive && (
+          <Input
+            handler={handleSetSeconds}
+            value={seconds}
+            placeholder="set secs"
+            type="text"
+            labelFor="seconds"
+            label="seconds"
+          />
+        )}
+        {/* {isActive && (
+          <Time>
+            <Number>{rest}</Number>s rest
+          </Time>
+        )} */}
 
-        <Input
-          handler={handleSetRest}
-          value={rest}
-          type="text"
-          labelFor="rest"
-          label="rest"
-        />
-        <Time>{rounds} rounds</Time>
+        {!isActive && (
+          <Input
+            handler={handleSetRest}
+            value={rest}
+            type="text"
+            labelFor="rest"
+            label="rest"
+          />
+        )}
+        {/* {isActive && (
+          <Time>
+            <Number>{rounds}</Number> rounds
+          </Time>
+        )} */}
 
-        <Input
-          handler={handleSetRounds}
-          value={rounds}
-          type="text"
-          labelFor="rounds"
-          label="rounds"
-        />
-        <Button
-          className={`button button-primary button-primary-${
-            isActive ? "active" : "inactive"
-          }`}
-          onClick={toggle}
-        >
-          {isActive ? "Pause" : "Start"}
-        </Button>
-        <Button className="button" onClick={reset}>
-          Reset
-        </Button>
+        {!isActive && (
+          <Input
+            handler={handleSetRounds}
+            value={rounds}
+            type="text"
+            labelFor="rounds"
+            label="rounds"
+          />
+        )}
+        <Flex>
+          <Button
+            className={`button button-primary button-primary-${
+              isActive ? "active" : "inactive"
+            }`}
+            onClick={toggle}
+          >
+            {isActive ? "Pause" : "Start"}
+          </Button>
+          <Button className="button" onClick={reset}>
+            Reset
+          </Button>
+        </Flex>
       </div>
     </App>
   );
