@@ -117,10 +117,11 @@ const TabataTimer = () => {
       {isActive && (
         <div style={{ width: "250px" }}>
           <CircularProgressbarWithChildren
-            value={(rounds / 8) * 50}
+            value={(rounds / 8) * 90}
+            text={rest !== 0 && seconds == 0 ? rest + "s" : null}
             strokeWidth={8}
             styles={buildStyles({
-              pathColor: "#fece15",
+              pathColor: "yellow",
               trailColor: "transparent",
             })}
           >
@@ -130,17 +131,19 @@ const TabataTimer = () => {
         */}
             <div style={{ width: "84%" }}>
               <CircularProgressbarWithChildren
-                value={(seconds / 30) * 100}
-                text={rest !== 0 && seconds == 0 ? rest + "s" : null}
+                value={(seconds / 30) * 70}
                 strokeWidth={8}
+                text={seconds !== 0 && seconds + "s"}
                 styles={buildStyles({
-                  
-                    value={(rest / 10) * 100}
-                    text={seconds !== 0 && seconds + "s"}
-                    strokeWidth={8}
+                  trailColor: "transparent",
+                })}
+              >
+                <div style={{ width: "84%" }}>
+                  <CircularProgressbar
+                  value={rest / 10 * 50}
                     styles={buildStyles({
+                      pathColor: "green",
                       trailColor: "transparent",
-                      pathColor: "#eb1a1d",
                     })}
                   />
                 </div>
@@ -149,7 +152,7 @@ const TabataTimer = () => {
           </CircularProgressbarWithChildren>
         </div>
       )}
-      {/* <CircularProgressbar value={seconds / 30 * 100} text={`${seconds} s`} /> */}
+
       <div className="row">
         {!isActive && (
           <Input
