@@ -89,8 +89,8 @@ const TabataTimer = () => {
   `;
 
   const Phase = styled.div`
-  margin: 0 0 40px 0;
-  `
+    margin: 0 0 40px 0;
+  `;
   const Flex = styled.div`
     display: flex;
     justify-content: center;
@@ -115,32 +115,39 @@ const TabataTimer = () => {
         </Time>
       )} */}
       {isActive && (
-        <CircularProgressbarWithChildren
-          style={{ width: "400px", height: "450px" }}
-          value={rest / 10 * 100}
-          text={rest !== 0 && seconds == 0 ? rest + "s" : null}
-          strokeWidth={3}
-          styles={buildStyles({
-            pathColor: "#f00",
-            trailColor: "transparent",
-          })}
-        >
-          {/*
+        <div style={{ width: "250px" }}>
+          <CircularProgressbarWithChildren
+            value={(rounds / 8) * 50}
+            strokeWidth={8}
+            styles={buildStyles({
+              pathColor: "#fece15",
+              trailColor: "transparent",
+            })}
+          >
+            {/*
           Width here needs to be (100 - 2 * strokeWidth)% 
           in order to fit exactly inside the outer progressbar.
         */}
-          <div style={{ width: "400px", height: "400px" }}>
-            <CircularProgressbar
-              value={seconds / 30 * 100}
-              strokeWidth={3}
-              text={seconds !== 0 && seconds + "s"}
-              styles={buildStyles({
-                trailColor: "transparent",
-
-              })}
-            />
-          </div>
-        </CircularProgressbarWithChildren>
+            <div style={{ width: "84%" }}>
+              <CircularProgressbarWithChildren
+                value={(seconds / 30) * 100}
+                text={rest !== 0 && seconds == 0 ? rest + "s" : null}
+                strokeWidth={8}
+                styles={buildStyles({
+                  
+                    value={(rest / 10) * 100}
+                    text={seconds !== 0 && seconds + "s"}
+                    strokeWidth={8}
+                    styles={buildStyles({
+                      trailColor: "transparent",
+                      pathColor: "#eb1a1d",
+                    })}
+                  />
+                </div>
+              </CircularProgressbarWithChildren>
+            </div>
+          </CircularProgressbarWithChildren>
+        </div>
       )}
       {/* <CircularProgressbar value={seconds / 30 * 100} text={`${seconds} s`} /> */}
       <div className="row">
