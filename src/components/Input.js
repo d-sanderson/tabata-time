@@ -14,10 +14,16 @@ const Input = ({ label, labelFor, type, placeholder, value, handler }) => {
     color: lime;
     font-size: 1.5rem;
     text-align: center;
+    font-family: monospace;
   `;
 
+  const Label = styled.div`
+  text-align: center;
+  margin: 10px;
+  `
   return (
     <div>
+      <Label htmlFor={labelFor}>set {label}</Label>
       <Input
         aria-label={labelFor}
         onChange={(e) => {
