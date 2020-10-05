@@ -5,9 +5,7 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-
 import styled from "@emotion/styled";
-
 import Input from "./Input";
 const TabataTimer = () => {
   const [seconds, setSeconds] = useState(30);
@@ -44,8 +42,8 @@ const TabataTimer = () => {
       setSeconds(30);
       setRest(10);
     }
+    //WORKOUT COMPLETE
     if (isActive && rounds === 0 && seconds === 0 && rest === 0) {
-      //WORKOUT COMPLETE
       setIsActive(false);
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
@@ -59,7 +57,6 @@ const TabataTimer = () => {
     width: 100vw;
     height: 100vh;
     font-family: Arial;
-    background-color: #282c34;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -67,15 +64,34 @@ const TabataTimer = () => {
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    background: #303a41;
   `;
-  const Number = styled.span`
-    font-family: monospace;
-  `;
-  const Time = styled.div`
-    font-size: 3rem;
-    padding: 2rem;
-  `;
+  const Container = styled.div`
+    width: 250px;
+    background: #303a41;
+    border-radius: 130px;
+    transform: box-shadow ease-in-out;
 
+    box-shadow: ${isActive
+      ? `
+      -14px -14px 40px 0px #fff9,
+      -8px -8px 10px 0px #fff9,
+      14px 14px 40px 0px #0002,
+      16px 16px 10px 0px #0001,
+      inset 0px 0px 0px 0px #fff9,
+      inset 0px 0px 0px 0px #0001,
+      inset 0px 0px 0px 0px #fff9,
+      inset 0px 0px 0px 0px #0001;`
+      : `
+      -7px -7px 20px 0px #fff9,
+      -4px -4px 5px 0px #fff9,
+      7px 7px 20px 0px #0002,
+      4px 4px 5px 0px #0001,
+      inset 0px 0px 0px 0px #fff9,
+      inset 0px 0px 0px 0px #0001,
+      inset 0px 0px 0px 0px #fff9,
+      inset 0px 0px 0px 0px #0001;`};
+  `;
   const Button = styled.button`
     padding: 0.6rem 1.5rem;
     margin: 80px 0.4rem;
@@ -93,7 +109,7 @@ const TabataTimer = () => {
   `;
   const Flex = styled.div`
     display: flex;
-    justify-content: center;
+    flex-direction: row;
   `;
   return (
     <App>
@@ -114,100 +130,82 @@ const TabataTimer = () => {
           <Number>{seconds}</Number>s work
         </Time>
       )} */}
-      {isActive && (
-        <div style={{ width: "250px" }}>
-          <CircularProgressbarWithChildren
-            value={(rounds / 8) * 90}
-            text={rest !== 0 && seconds == 0 ? rest + "s" : null}
-            strokeWidth={8}
-            styles={buildStyles({
-              pathColor: "yellow",
-              trailColor: "transparent",
-            })}
-          >
-            {/*
+
+      <Container>
+        <CircularProgressbarWithChildren
+          value={(rounds / 8) * 90}
+          text={rest !== 0 && seconds === 0 ? rest + "s" : null}
+          strokeWidth={8}
+          styles={buildStyles({
+            pathColor: "yellow",
+            trailColor: "transparent",
+          })}
+        >
+          {/*
           Width here needs to be (100 - 2 * strokeWidth)% 
           in order to fit exactly inside the outer progressbar.
         */}
-            <div style={{ width: "84%" }}>
-              <CircularProgressbarWithChildren
-                value={(seconds / 30) * 70}
-                strokeWidth={8}
-                text={seconds !== 0 && seconds + "s"}
-                styles={buildStyles({
-                  trailColor: "transparent",
-                })}
-              >
-                <div style={{ width: "84%" }}>
-                  <CircularProgressbar
-                  value={rest / 10 * 50}
-                    styles={buildStyles({
-                      pathColor: "green",
-                      trailColor: "transparent",
-                    })}
-                  />
-                </div>
-              </CircularProgressbarWithChildren>
-            </div>
-          </CircularProgressbarWithChildren>
-        </div>
-      )}
+          <div style={{ width: "84%" }}>
+            <CircularProgressbarWithChildren
+              value={(seconds / 30) * 70}
+              strokeWidth={8}
+              text={seconds !== 0 && seconds + "s"}
+              styles={buildStyles({
+                trailColor: "transparent",
+              })}
+            >
+              <div style={{ width: "84%" }}>
+                <CircularProgressbar
+                  value={(rest / 10) * 50}
+                  styles={buildStyles({
+                    pathColor: "green",
+                    trailColor: "transparent",
+                  })}
+                />
+              </div>
+            </CircularProgressbarWithChildren>
+          </div>
+        </CircularProgressbarWithChildren>
+      </Container>
 
-      <div className="row">
-        {!isActive && (
-          <Input
-            handler={handleSetSeconds}
-            value={seconds}
-            placeholder="set secs"
-            type="text"
-            labelFor="seconds"
-            label="seconds"
-          />
-        )}
-        {/* {isActive && (
-          <Time>
-            <Number>{rest}</Number>s rest
-          </Time>
-        )} */}
+      <Flex>
+        <Input
+          handler={handleSetSeconds}
+          value={seconds}
+          placeholder="set secs"
+          type="button"
+          labelFor="work"
+          label="seconds"
+        />
+        <Input
+          handler={handleSetRest}
+          value={rest}
+          type="button"
+          labelFor="rest"
+          label="rest"
+        />
+        <Input
+          handler={handleSetRounds}
+          value={rounds}
+          type="button"
+          labelFor="rounds"
+          label="rounds"
+        />
+      </Flex>
 
-        {!isActive && (
-          <Input
-            handler={handleSetRest}
-            value={rest}
-            type="text"
-            labelFor="rest"
-            label="rest"
-          />
-        )}
-        {/* {isActive && (
-          <Time>
-            <Number>{rounds}</Number> rounds
-          </Time>
-        )} */}
-
-        {!isActive && (
-          <Input
-            handler={handleSetRounds}
-            value={rounds}
-            type="text"
-            labelFor="rounds"
-            label="rounds"
-          />
-        )}
-        <Flex>
-          <Button
-            className={`button button-primary button-primary-${
-              isActive ? "active" : "inactive"
-            }`}
-            onClick={toggle}
-          >
-            {isActive ? "Pause" : "Start"}
-          </Button>
-          <Button className="button" onClick={reset}>
-            Reset
-          </Button>
-        </Flex>
-      </div>
+      <Flex>
+        <Button
+          className={`button button-primary button-primary-${
+            isActive ? "active" : "inactive"
+          }`}
+          onClick={toggle}
+        >
+          {isActive ? "Pause" : "Start"}
+        </Button>
+        <Button className="button" onClick={reset}>
+          Reset
+        </Button>
+      </Flex>
     </App>
   );
 };
