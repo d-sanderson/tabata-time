@@ -173,21 +173,21 @@ const TabataTimer = () => {
           handler={handleSetSeconds}
           value={seconds}
           placeholder="set secs"
-          type="button"
+          type="tel"
           labelFor="work"
           label="seconds"
         />
         <Input
           handler={handleSetRest}
           value={rest}
-          type="button"
+          type="tel"
           labelFor="rest"
           label="rest"
         />
         <Input
           handler={handleSetRounds}
           value={rounds}
-          type="button"
+          type="tel"
           labelFor="rounds"
           label="rounds"
         />
