@@ -8,42 +8,65 @@ import "react-circular-progressbar/dist/styles.css";
 import styled from "@emotion/styled";
 import Input from "./Input";
 const TabataTimer = () => {
-  const [seconds, setSeconds] = useState(30);
+  const [seconds, setSeconds] = useState({
+    initialDuration: 30,
+    currentDuration: 30,
+  });
   const [isActive, setIsActive] = useState(false);
-  const [rest, setRest] = useState(10);
-  const [rounds, setRounds] = useState(8);
+  const [rest, setRest] = useState({ initialDuration: 10, currentDuration: 10 });
+  const [rounds, setRounds] = useState({ initialRound: 3, currentRound: 3 });
 
   const toggle = () => setIsActive(!isActive);
   const reset = () => {
-    setSeconds(30);
-    setRest(10);
-    setRounds(7);
     setIsActive(false);
   };
 
-  const handleSetSeconds = (secs) => setSeconds(secs);
-  const handleSetRounds = (rounds) => setRounds(rounds);
-  const handleSetRest = (rest) => setRest(rest);
+  const handleSetSeconds = (secs) => {
+    setSeconds({ initialDuration: secs, currentDuration: secs });
+  };
+  const handleSetRounds = (rounds) =>
+    setRounds({ initialRound: rounds, currentRound: rounds });
+  const handleSetRest = (rest) =>
+    setRest({ initialDuration: rest, currentDuration: rest });
 
   useEffect(() => {
     let interval = null;
-    if (isActive && seconds !== 0) {
+    if (isActive && seconds.currentDuration !== 0) {
       interval = setInterval(() => {
-        setSeconds((seconds) => seconds - 1);
+        setSeconds((seconds) => {
+          return { ...seconds, currentDuration: seconds.currentDuration - 1 };
+        });
       }, 1000);
     }
-    if (isActive && rest !== 0 && seconds === 0) {
+    if (
+      isActive &&
+      rest.currentDuration !== 0 &&
+      seconds.currentDuration === 0
+    ) {
       interval = setInterval(() => {
-        setRest((rest) => rest - 1);
+        setRest((rest) => {
+          return { ...rest, currentDuration: rest.currentDuration - 1 };
+        });
       }, 1000);
     }
-    if (isActive && seconds === 0 && rest === 0 && rounds > 0) {
-      setRounds((rounds) => rounds - 1);
-      setSeconds(30);
-      setRest(10);
+    if (
+      isActive &&
+      seconds.currentDuration === 0 &&
+      rest.currentDuration === 0 &&
+      rounds.currentRound > 0
+    ) {
+ setRounds((prevState) => ({...prevState, currentRound: prevState.currentRound - 1}))
+ setSeconds(seconds => ({...seconds, currentDuration: seconds.initialDuration}))
+ setRest(seconds => ({...rest, currentDuration: rest.initialDuration}))
+
     }
     //WORKOUT COMPLETE
-    if (isActive && rounds === 0 && seconds === 0 && rest === 0) {
+    if (
+      isActive &&
+      rounds.currentRound === 0 &&
+      seconds.currentDuration === 0 &&
+      rest.currentDuration === 0
+    ) {
       setIsActive(false);
     } else if (!isActive && seconds !== 0) {
       clearInterval(interval);
@@ -51,7 +74,7 @@ const TabataTimer = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [isActive, seconds, rounds, rest]);
+  }, [isActive, seconds, rest]);
 
   const App = styled.div`
     width: 100vw;
@@ -113,13 +136,15 @@ const TabataTimer = () => {
   `;
   return (
     <App>
-      <h3>{rounds} / 8</h3>
+      <h3>
+        {rounds.currentRound} / {rounds.initialRound}
+      </h3>
       <Phase>
-        {isActive && seconds > 0 ? (
+        {isActive && seconds.currentDuration > 0 ? (
           <h1>WORK</h1>
-        ) : isActive && rest > 0 ? (
+        ) : isActive && rest.currentDuration > 0 ? (
           <h1>REST</h1>
-        ) : !isActive && rounds === 0 && rest === 0 && seconds === 0 ? (
+        ) : !isActive && rounds.currentRound === 0 && rest.currentDuration === 0 && seconds.currentDuration === 0 ? (
           <h1>DONE</h1>
         ) : (
           <h1>BEGIN</h1>
@@ -133,8 +158,12 @@ const TabataTimer = () => {
 
       <Container>
         <CircularProgressbarWithChildren
-          value={(rounds / 8) * 90}
-          text={rest !== 0 && seconds === 0 ? rest + "s" : null}
+          value={(rounds.currentRound / rounds.initialRound) * 100}
+          text={
+            rest.currentRound !== 0 && seconds.currentDuration === 0
+              ? rest.currentDuration + "s"
+              : null
+          }
           strokeWidth={8}
           styles={buildStyles({
             pathColor: "yellow",
@@ -147,16 +176,16 @@ const TabataTimer = () => {
         */}
           <div style={{ width: "84%" }}>
             <CircularProgressbarWithChildren
-              value={(seconds / 30) * 70}
+              value={(seconds.currentDuration / seconds.initialDuration) * 100}
               strokeWidth={8}
-              text={seconds !== 0 && seconds + "s"}
+              text={seconds !== 0 && seconds.currentDuration + "s"}
               styles={buildStyles({
                 trailColor: "transparent",
               })}
             >
               <div style={{ width: "84%" }}>
                 <CircularProgressbar
-                  value={(rest / 10) * 50}
+                  value={(rest.currentDuration / rest.initialDuration) * 100}
                   styles={buildStyles({
                     pathColor: "green",
                     trailColor: "transparent",
@@ -171,7 +200,7 @@ const TabataTimer = () => {
       <Flex>
         <Input
           handler={handleSetSeconds}
-          value={seconds}
+          value={seconds.currentDuration}
           placeholder="set secs"
           type="tel"
           labelFor="work"
@@ -179,14 +208,14 @@ const TabataTimer = () => {
         />
         <Input
           handler={handleSetRest}
-          value={rest}
+          value={rest.currentDuration}
           type="tel"
           labelFor="rest"
           label="rest"
         />
         <Input
           handler={handleSetRounds}
-          value={rounds}
+          value={rounds.currentRound}
           type="tel"
           labelFor="rounds"
           label="rounds"
