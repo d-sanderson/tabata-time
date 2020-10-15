@@ -19,6 +19,9 @@ const TabataTimer = () => {
   const toggle = () => setIsActive(!isActive);
   const reset = () => {
     setIsActive(false);
+    setSeconds(prevState => ({...prevState, currentDuration: prevState.initialDuration}))
+    setRest(prevState => ({...prevState, currentDuration: prevState.initialDuration}))
+    setRounds(prevState => ({...prevState, currentRound: prevState.initialRound}))
   };
 
   const handleSetSeconds = (secs) => {
