@@ -2,37 +2,43 @@ import React from "react";
 import styled from "@emotion/styled";
 
 const Input = ({ label, labelFor, type, placeholder, value, handler }) => {
-  const Input = styled.button`
+  const Input = styled.input`
     width: 35px;
+    padding: 1rem;
     height: 35px;
-    margin: 80px 20px 0 20px;
+    width: 130px;
+    display: block;
 font-family: "Trebuchet MS", Helvetica, sans-serif
+    margin: auto;
+    border-radius: 3px;
+    font-size: 0.8rem;
+    background-color: #282c34;
+    color: lime;
     font-size: 1.5rem;
+    font-size: 1.5rem;
+    text-align: center;
     font-wedight: bold;
-    display: inline-block;
-    border-radius: 50%;
-    background-color: #f2f0f6;
-    box-shadow: -10px -10px 20px 0px rgba(255,255,255,0.05), 10px 10px 20px 0px rgba(0,0,0,0.2)
-  }
+    font-family: monospace;
   `;
 
-  const Label = styled.div`
-    text-align: center;
-    margin: 10px;
+  const Label = styled.h3`
+  margin: 40px 0 0 0;
+  display: grid;
+  place-items: center;
   `;
   return (
     <div>
+      <Label>{labelFor}</Label>
       <Input
         aria-label={labelFor}
-        onClick= {(e) => {
-          const duration = prompt(`Enter ${labelFor} duration`);
-          if (Number.isInteger(parseInt(duration)))
-          handler(parseInt(duration));
+        onChange={(e) => {
+          if (Number.isInteger(parseInt(e.target.value)))
+            handler(parseInt(e.target.value));
         }}
         type={type}
         value={value}
         placeholder={placeholder}
-      >{labelFor[0].toUpperCase()}</Input>
+      />
     </div>
   );
 };
