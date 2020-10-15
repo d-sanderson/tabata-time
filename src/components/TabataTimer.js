@@ -95,29 +95,10 @@ const TabataTimer = () => {
     border-radius: 130px;
     transform: box-shadow ease-in-out;
 
-    box-shadow: ${isActive
-      ? `
-      -14px -14px 40px 0px #fff9,
-      -8px -8px 10px 0px #fff9,
-      14px 14px 40px 0px #0002,
-      16px 16px 10px 0px #0001,
-      inset 0px 0px 0px 0px #fff9,
-      inset 0px 0px 0px 0px #0001,
-      inset 0px 0px 0px 0px #fff9,
-      inset 0px 0px 0px 0px #0001;`
-      : `
-      -7px -7px 20px 0px #fff9,
-      -4px -4px 5px 0px #fff9,
-      7px 7px 20px 0px #0002,
-      4px 4px 5px 0px #0001,
-      inset 0px 0px 0px 0px #fff9,
-      inset 0px 0px 0px 0px #0001,
-      inset 0px 0px 0px 0px #fff9,
-      inset 0px 0px 0px 0px #0001;`};
   `;
   const Button = styled.button`
     padding: 0.6rem 1.5rem;
-    margin: 80px 0.4rem;
+    margin: 40px 0;
     border-radius: 3px;
     text-transform: uppercase;
     font-weight: 600;
@@ -159,11 +140,6 @@ const TabataTimer = () => {
       <Container>
         <CircularProgressbarWithChildren
           value={(rounds.currentRound / rounds.initialRound) * 100}
-          text={
-            rest.currentRound !== 0 && seconds.currentDuration === 0
-              ? rest.currentDuration + "s"
-              : null
-          }
           strokeWidth={8}
           styles={buildStyles({
             pathColor: "yellow",
@@ -178,7 +154,7 @@ const TabataTimer = () => {
             <CircularProgressbarWithChildren
               value={(seconds.currentDuration / seconds.initialDuration) * 100}
               strokeWidth={8}
-              text={seconds !== 0 && seconds.currentDuration + "s"}
+              text={seconds.currentDuration !== 0 && seconds.currentDuration + "s"}
               styles={buildStyles({
                 trailColor: "transparent",
               })}
@@ -186,6 +162,7 @@ const TabataTimer = () => {
               <div style={{ width: "84%" }}>
                 <CircularProgressbar
                   value={(rest.currentDuration / rest.initialDuration) * 100}
+                  text={(seconds.currentDuration == 0 && rest.currentDuration !== 0) && rest.currentDuration + "s"}
                   styles={buildStyles({
                     pathColor: "green",
                     trailColor: "transparent",
