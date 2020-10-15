@@ -66,15 +66,15 @@ const TabataTimer = () => {
     let interval = null;
     if (WORK_PHASE) {
       interval = setInterval(() => {
-        setSeconds((seconds) => {
-          return { ...seconds, currentDuration: seconds.currentDuration - 1 };
+        setSeconds((prevState) => {
+          return { ...prevState, currentDuration: prevState.currentDuration - 1 };
         });
       }, 1000);
     }
     if (REST_PHASE) {
       interval = setInterval(() => {
-        setRest((rest) => {
-          return { ...rest, currentDuration: rest.currentDuration - 1 };
+        setRest((prevState) => {
+          return { ...prevState, currentDuration: prevState.currentDuration - 1 };
         });
       }, 1000);
     }
@@ -83,13 +83,13 @@ const TabataTimer = () => {
         ...prevState,
         currentRound: prevState.currentRound - 1,
       }));
-      setSeconds((seconds) => ({
-        ...seconds,
-        currentDuration: seconds.initialDuration,
+      setSeconds((prevState) => ({
+        ...prevState,
+        currentDuration: prevState.initialDuration,
       }));
-      setRest((seconds) => ({
-        ...rest,
-        currentDuration: rest.initialDuration,
+      setRest((prevState) => ({
+        ...prevState,
+        currentDuration: prevState.initialDuration,
       }));
     }
     if (WORKOUT_COMPLETE) {
@@ -100,7 +100,7 @@ const TabataTimer = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [isActive, seconds, rest]);
+  }, [isActive, seconds, rest, rounds]);
 
   const App = styled.div`
     width: 100vw;
